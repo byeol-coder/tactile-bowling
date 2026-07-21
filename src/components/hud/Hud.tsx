@@ -13,7 +13,7 @@ export function Hud({ players, current, frame, frameRollCount }: HudProps) {
   const player = players[current];
   const total = computeScore(player.rolls).total;
   return (
-    <header className="hud panel area-hud">
+    <header className="hud panel panel--accent area-hud">
       <div className="hud__block">
         <span className="eyebrow">프레임</span>
         <span className="hud__value">{frame + 1}<span className="hud__sub"> / 10</span></span>

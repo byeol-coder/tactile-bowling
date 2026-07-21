@@ -1,7 +1,15 @@
-/* 스테이지(레인) */
+/* 스테이지(레인) — 은은한 우드 텍스처 + 앰버 비네트로 인트로/결과 화면과 톤을 맞춘다.
+   실제 레인 그래픽은 여전히 SVG(외부 이미지 없음, README 방침 유지) — 이건 SVG 바깥
+   여백에만 보이는 배경 장식이라 플레이 콘텐츠 자체엔 영향 없음. */
 .stage {
   position: relative;
-  background: var(--surface-1);
+  background-image:
+    radial-gradient(120% 90% at 50% 100%, rgba(224, 166, 60, 0.10), transparent 60%),
+    linear-gradient(var(--surface-1), var(--surface-1)),
+    url('/assets/textures/lane-wood-seamless-512.webp');
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: cover, cover, 280px 280px;
+  background-blend-mode: normal, normal, overlay;
   border: 1px solid var(--border-1);
   border-radius: var(--radius-3);
   padding: var(--space-3);
@@ -10,7 +18,19 @@
 }
 .stage:focus-visible { outline-offset: -3px; }
 .lane-svg { width: 100%; max-width: 460px; height: auto; display: block; }
-.stage__next { position: absolute; bottom: var(--space-4); left: 50%; transform: translateX(-50%); }
+.stage__next {
+  position: absolute; bottom: var(--space-4); left: 50%; transform: translateX(-50%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* 게임플레이 패널 상단 앰버-틸 악센트 바 — 인트로 히어로/결과 셀레브레이션과 같은
+   팔레트를 공유해서 플레이 화면이 붕 뜨지 않게 한다. 이미지 없이 CSS 그라디언트로만. */
+.panel--accent { position: relative; overflow: hidden; }
+.panel--accent::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent-teal), var(--accent-amber));
+  opacity: 0.85;
+}
 
 /* 인트로 */
 .intro { min-height: 100dvh; display: flex; flex-direction: column; }

@@ -48,7 +48,7 @@ export function ThrowControls({ phase, params, onAdjust, onNext, onThrow, onRest
   const isPower = phase === 'power';
 
   return (
-    <section className="controls panel area-controls" aria-label="투구 조작">
+    <section className="controls panel panel--accent area-controls" aria-label="투구 조작">
       <ol className="controls__steps">
         {STEPS.map((s) => (
           <li key={s.id} className={`controls__step ${phase === s.id ? 'is-active' : ''}`} aria-current={phase === s.id ? 'step' : undefined}>

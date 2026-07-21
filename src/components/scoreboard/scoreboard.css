@@ -1,8 +1,13 @@
-.scoreboard {
+/* 주의: .panel 의 `border: 1px solid ...` shorthand 는 border-image 서브 속성을
+   초기값으로 리셋한다(CSS Backgrounds Level 3). 번들 후 두 규칙 중 어느 쪽이 뒤에
+   오는지 신뢰할 수 없어서(단일 파일 빌드로 전부 한 <style> 에 합쳐짐), 클래스 결합으로
+   명시적으로 더 높은 specificity 를 줘서 항상 이 규칙이 이기게 한다. */
+.scoreboard.panel {
   padding: var(--space-4) var(--space-3) var(--space-3);
   /* 스코어보드 베젤(장식 프레임) — 9-slice로 늘려 어떤 인원수/화면 크기에도 안 깨지게. */
   background: var(--surface-1);
   border-style: solid;
+  border-color: transparent;
   border-width: 14px 16px 16px 16px;
   border-image-source: url('/assets/ui/scoreboard-bezel-1536x720.png');
   border-image-slice: 100 118 105 120;

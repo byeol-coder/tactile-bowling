@@ -55,7 +55,7 @@ export function TactilePreview({ label }: Props) {
   }
 
   return (
-    <section className="tactile panel area-tactile" aria-label="촉각 미리보기">
+    <section className="tactile panel panel--accent area-tactile" aria-label="촉각 미리보기">
       <div className="tactile__head">
         <span className="eyebrow">촉각 미리보기 60×40</span>
         <span className="tactile__mode">{label}</span>
