@@ -49,7 +49,8 @@ export function IntroScreen({ onStartSingle, onStartMulti, onSettings, onHelp }:
         <div className="intro__content anim-rise">
           <p className="eyebrow">함께 즐기는 10프레임 볼링</p>
           <h1 className="intro__title" id="intro-title">
-            <span>TACTILE</span>
+            <span className="sr-only">택타일 볼링</span>
+            <span className="intro__title-kicker">TACTILE</span>
             <strong>BOWLING</strong>
           </h1>
           <p className="intro__tag">
