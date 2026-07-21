@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 420">
+  <defs>
+    <linearGradient id="room" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101827"/>
+      <stop offset=".44" stop-color="#17263a"/>
+      <stop offset="1" stop-color="#0a111d"/>
+    </linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b405f"/>
+      <stop offset="1" stop-color="#18263b"/>
+    </linearGradient>
+    <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e0b483"/>
+      <stop offset=".32" stop-color="#c78950"/>
+      <stop offset=".72" stop-color="#9a6035"/>
+      <stop offset="1" stop-color="#71482b"/>
+    </linearGradient>
+    <linearGradient id="gutter" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b2738"/>
+      <stop offset="1" stop-color="#0c1320"/>
+    </linearGradient>
+    <linearGradient id="laneLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff7e8" stop-opacity=".74"/>
+      <stop offset="1" stop-color="#ffd8a3" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="lamp">
+      <stop offset="0" stop-color="#fff5cf" stop-opacity=".94"/>
+      <stop offset=".35" stop-color="#ffc975" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#ffbb55" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="12"/></filter>
+    <clipPath id="laneClip"><polygon points="158,44 242,44 350,384 50,384"/></clipPath>
+  </defs>
+
+  <rect width="400" height="420" rx="22" fill="url(#room)"/>
+  <path d="M0 0h400v88H0z" fill="url(#wall)"/>
+  <g opacity=".28" stroke="#7390b4" stroke-width="1">
+    <path d="M0 26h400M0 58h400"/>
+    <path d="M64 0v88M136 0v88M208 0v88M280 0v88M352 0v88"/>
+  </g>
+  <g opacity=".82">
+    <ellipse cx="112" cy="34" rx="54" ry="34" fill="url(#lamp)" filter="url(#blur)"/>
+    <ellipse cx="200" cy="34" rx="54" ry="34" fill="url(#lamp)" filter="url(#blur)"/>
+    <ellipse cx="288" cy="34" rx="54" ry="34" fill="url(#lamp)" filter="url(#blur)"/>
+    <rect x="86" y="22" width="52" height="6" rx="3" fill="#fff4cf"/>
+    <rect x="174" y="22" width="52" height="6" rx="3" fill="#fff4cf"/>
+    <rect x="262" y="22" width="52" height="6" rx="3" fill="#fff4cf"/>
+  </g>
+
+  <rect x="120" y="48" width="160" height="38" rx="8" fill="#111a29" stroke="#3d5676"/>
+  <circle cx="146" cy="67" r="5" fill="#f26a3d"/>
+  <rect x="159" y="62" width="84" height="10" rx="5" fill="#2d4565"/>
+
+  <polygon points="146,40 254,40 382,392 18,392" fill="url(#gutter)"/>
+  <polygon points="158,44 242,44 350,384 50,384" fill="url(#wood)" stroke="#f0c18d" stroke-opacity=".48"/>
+  <polygon points="148,42 158,44 50,384 22,392" fill="#152033"/>
+  <polygon points="242,44 252,42 378,392 350,384" fill="#152033"/>
+
+  <g clip-path="url(#laneClip)">
+    <path d="M174 44l-78 340M188 44l-30 340M212 44l30 340M226 44l78 340" stroke="#f4cf9f" stroke-opacity=".44" stroke-width="1.2"/>
+    <path d="M42 122h316M30 206h340M18 300h364" stroke="#734725" stroke-opacity=".44" stroke-width="2"/>
+    <polygon points="192,44 210,44 240,384 152,384" fill="url(#laneLight)" opacity=".34"/>
+  </g>
+
+  <line x1="50" y1="384" x2="350" y2="384" stroke="#fff0d8" stroke-width="2" stroke-opacity=".82"/>
+  <g fill="#5f351f" opacity=".88">
+    <path d="M196 238l4 0 6 10h-16z"/>
+    <path d="M178 266l5 0 6 13h-18z"/>
+    <path d="M217 266l5 0 9 13h-19z"/>
+  </g>
+  <ellipse cx="200" cy="398" rx="155" ry="10" fill="#050912" opacity=".58"/>
+</svg>
