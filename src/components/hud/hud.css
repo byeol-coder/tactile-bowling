@@ -1,0 +1,15 @@
+.hud {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-5);
+  padding: var(--space-3) var(--space-5);
+}
+.hud__block { display: flex; flex-direction: column; gap: 2px; }
+.hud__player { margin-left: auto; }
+.hud__value { font-family: var(--font-display); font-size: var(--fs-5); display: flex; align-items: center; gap: var(--space-2); }
+.hud__value--big { font-size: var(--fs-6); color: var(--accent-amber); }
+.hud__sub { font-size: var(--fs-3); color: var(--text-low); }
+.hud__pnum { color: var(--text-low); font-family: var(--font-mono); font-size: var(--fs-3); }
+.hud__score { text-align: right; }
+@media (max-width: 560px) {
+  .hud { gap: var(--space-3); padding: var(--space-3); }
+  .hud__player { margin-left: 0; }
+}

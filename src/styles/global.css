@@ -1,0 +1,70 @@
+@import './tokens.css';
+@import './animations.css';
+@import './responsive.css';
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; margin: 0; }
+
+body {
+  background: radial-gradient(120% 120% at 50% -10%, var(--bg-1), var(--bg-0));
+  color: var(--text-hi);
+  font-family: var(--font-body);
+  font-size: var(--fs-3);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1.1; margin: 0; }
+
+button { font-family: inherit; }
+
+/* 명확한 포커스 링 — 컨테이너에 잘리지 않도록 outline 사용 */
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-1);
+}
+
+/* 스크린리더 전용 텍스트 */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* 스킵 링크 */
+.skip-link {
+  position: absolute; left: var(--space-3); top: -60px; z-index: var(--z-live);
+  background: var(--surface-2); color: var(--text-hi); padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2); transition: top var(--dur-fast) var(--ease);
+}
+.skip-link:focus { top: var(--space-3); }
+
+/* 공통 버튼 컴포넌트 */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: var(--touch-min); min-width: var(--touch-min);
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--fs-3); font-weight: 600;
+  color: var(--text-hi); background: var(--surface-2);
+  border: 1px solid var(--border-2); border-radius: var(--radius-2);
+  cursor: pointer; transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.btn:hover { background: var(--surface-3); }
+.btn:active { transform: translateY(1px); }
+.btn[aria-disabled='true'], .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn--primary { background: var(--accent-teal); color: #06231f; border-color: transparent; }
+.btn--primary:hover { background: #38c8bb; }
+.btn--ghost { background: transparent; }
+.btn--lg { font-size: var(--fs-4); padding: var(--space-4) var(--space-6); }
+
+.panel {
+  background: var(--surface-1); border: 1px solid var(--border-1);
+  border-radius: var(--radius-3); box-shadow: var(--shadow-2);
+}
+
+.eyebrow {
+  font-family: var(--font-mono); font-size: var(--fs-1); letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-low);
+}
