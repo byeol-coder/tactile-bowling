@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">볼링장 레인 일러스트</title>
+  <desc id="desc">따뜻한 조명이 비치는 볼링장 레인 끝에 핀이 서 있고 전경에 볼링공이 놓인 장면</desc>
+  <defs>
+    <linearGradient id="room" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101727"/>
+      <stop offset="0.52" stop-color="#17263a"/>
+      <stop offset="1" stop-color="#0a111d"/>
+    </linearGradient>
+    <linearGradient id="ceiling" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#243550"/>
+      <stop offset="1" stop-color="#111a2a"/>
+    </linearGradient>
+    <linearGradient id="lane" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d9a66e"/>
+      <stop offset="0.42" stop-color="#b77945"/>
+      <stop offset="1" stop-color="#774727"/>
+    </linearGradient>
+    <linearGradient id="laneGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff5dc" stop-opacity="0.82"/>
+      <stop offset="1" stop-color="#ffd49b" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="ball" x1="0.15" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#ff936c"/>
+      <stop offset="0.5" stop-color="#ef5f35"/>
+      <stop offset="1" stop-color="#9e2c1c"/>
+    </linearGradient>
+    <radialGradient id="ballShine" cx="35%" cy="25%" r="60%">
+      <stop offset="0" stop-color="#fff8ee" stop-opacity="0.8"/>
+      <stop offset="0.22" stop-color="#ffd8c8" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="lamp" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff7d6" stop-opacity="0.95"/>
+      <stop offset="0.24" stop-color="#ffd99c" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#ffbd65" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <filter id="ballShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="26" stdDeviation="22" flood-color="#05080d" flood-opacity="0.72"/>
+    </filter>
+    <filter id="pinShadow" x="-100%" y="-100%" width="300%" height="300%">
+      <feDropShadow dx="0" dy="10" stdDeviation="7" flood-color="#0a0e16" flood-opacity="0.65"/>
+    </filter>
+    <clipPath id="laneClip">
+      <polygon points="902,342 1190,342 1570,1000 520,1000"/>
+    </clipPath>
+    <g id="pin">
+      <path d="M0 -40c12 0 19 8 17 19-2 10-8 18-6 30 2 13 13 23 15 43 2 20-8 38-26 38s-28-18-26-38c2-20 13-30 15-43 2-12-4-20-6-30-2-11 5-19 17-19z" fill="#fffaf2"/>
+      <path d="M-14 -8h28l3 13h-34z" fill="#e64e43"/>
+      <path d="M-12 7h24l3 9h-30z" fill="#d63c35"/>
+      <ellipse cy="48" rx="17" ry="5" fill="#d7d7d2" opacity="0.5"/>
+    </g>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#room)"/>
+  <path d="M0 0h1600v310H0z" fill="url(#ceiling)"/>
+  <path d="M0 310h1600v110H0z" fill="#111827"/>
+
+  <g opacity="0.72">
+    <path d="M0 92h1600" stroke="#587195" stroke-width="3" opacity="0.32"/>
+    <path d="M0 212h1600" stroke="#587195" stroke-width="2" opacity="0.22"/>
+    <path d="M220 0v310M540 0v310M860 0v310M1180 0v310M1500 0v310" stroke="#526782" stroke-width="2" opacity="0.2"/>
+  </g>
+
+  <g>
+    <ellipse cx="690" cy="172" rx="150" ry="110" fill="url(#lamp)" filter="url(#softGlow)"/>
+    <ellipse cx="1060" cy="172" rx="150" ry="110" fill="url(#lamp)" filter="url(#softGlow)"/>
+    <ellipse cx="1430" cy="172" rx="150" ry="110" fill="url(#lamp)" filter="url(#softGlow)"/>
+    <rect x="632" y="135" width="116" height="20" rx="10" fill="#fff4d1" opacity="0.9"/>
+    <rect x="1002" y="135" width="116" height="20" rx="10" fill="#fff4d1" opacity="0.9"/>
+    <rect x="1372" y="135" width="116" height="20" rx="10" fill="#fff4d1" opacity="0.9"/>
+  </g>
+
+  <path d="M760 305h560l82 115H690z" fill="#24324a"/>
+  <rect x="875" y="327" width="340" height="58" rx="18" fill="#101827" stroke="#405571" stroke-width="3"/>
+  <circle cx="932" cy="356" r="10" fill="#f06a3d"/>
+  <rect x="960" y="347" width="190" height="18" rx="9" fill="#31455f"/>
+
+  <polygon points="902,342 1190,342 1570,1000 520,1000" fill="url(#lane)"/>
+  <polygon points="922,342 947,342 770,1000 690,1000" fill="#4e2f22" opacity="0.78"/>
+  <polygon points="1145,342 1170,342 1452,1000 1368,1000" fill="#4e2f22" opacity="0.78"/>
+  <polygon points="902,342 922,342 690,1000 520,1000" fill="#1a2434"/>
+  <polygon points="1170,342 1190,342 1570,1000 1452,1000" fill="#1a2434"/>
+
+  <g clip-path="url(#laneClip)" opacity="0.45">
+    <path d="M820 342l-120 658M900 342l-70 658M980 342l-15 658M1060 342l45 658M1140 342l110 658M1220 342l180 658" stroke="#f6c58c" stroke-width="3"/>
+    <path d="M500 510h1040M430 680h1180M350 860h1340" stroke="#6e4028" stroke-width="4" opacity="0.5"/>
+    <polygon points="1018,342 1072,342 1150,1000 880,1000" fill="url(#laneGlow)" opacity="0.45"/>
+  </g>
+
+  <g fill="#4c2b1b" opacity="0.86">
+    <path d="M1017 544l9 0 7 18h-23z"/>
+    <path d="M1055 544l9 0 10 18h-24z"/>
+    <path d="M1093 544l9 0 12 18h-25z"/>
+    <path d="M985 600l12 0 6 26h-31z"/>
+    <path d="M1044 600l12 0 12 26h-33z"/>
+    <path d="M1104 600l12 0 18 26h-34z"/>
+  </g>
+
+  <g transform="translate(1045 438) scale(.62)" filter="url(#pinShadow)">
+    <g transform="translate(0 -34)"><use href="#pin"/></g>
+    <g transform="translate(-38 -10)"><use href="#pin"/></g>
+    <g transform="translate(38 -10)"><use href="#pin"/></g>
+    <g transform="translate(-72 18)"><use href="#pin"/></g>
+    <g transform="translate(0 18)"><use href="#pin"/></g>
+    <g transform="translate(72 18)"><use href="#pin"/></g>
+    <g transform="translate(-104 50)"><use href="#pin"/></g>
+    <g transform="translate(-35 50)"><use href="#pin"/></g>
+    <g transform="translate(35 50)"><use href="#pin"/></g>
+    <g transform="translate(104 50)"><use href="#pin"/></g>
+  </g>
+
+  <ellipse cx="1160" cy="916" rx="190" ry="58" fill="#070b12" opacity="0.62"/>
+  <g filter="url(#ballShadow)">
+    <circle cx="1160" cy="816" r="132" fill="url(#ball)"/>
+    <circle cx="1160" cy="816" r="132" fill="url(#ballShine)"/>
+    <ellipse cx="1125" cy="768" rx="17" ry="22" fill="#6f211a" transform="rotate(-18 1125 768)"/>
+    <ellipse cx="1170" cy="747" rx="17" ry="22" fill="#6f211a" transform="rotate(8 1170 747)"/>
+    <ellipse cx="1200" cy="785" rx="17" ry="22" fill="#6f211a" transform="rotate(28 1200 785)"/>
+    <path d="M1082 866c48 42 119 54 181 26" fill="none" stroke="#ffb08e" stroke-width="9" stroke-linecap="round" opacity="0.34"/>
+  </g>
+
+  <g opacity="0.24">
+    <circle cx="1370" cy="490" r="7" fill="#ffcf8a"/>
+    <circle cx="1460" cy="570" r="4" fill="#ffcf8a"/>
+    <circle cx="1320" cy="650" r="5" fill="#ffcf8a"/>
+    <circle cx="1520" cy="720" r="6" fill="#ffcf8a"/>
+  </g>
+
+  <rect width="1600" height="1000" fill="url(#room)" opacity="0.05"/>
+</svg>

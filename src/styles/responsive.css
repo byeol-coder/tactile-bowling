@@ -38,10 +38,13 @@
 /* DotPad 미리보기/수치 패널이 메인 장면보다 커지지 않게 폭 제한 */
 .area-tactile { max-width: 320px; }
 
-/* 임베드 모드: 인트로 장식 축소, 스크롤 최소화, 핵심 우선 */
+/* 임베드 모드: 핵심 플레이와 진입 동작을 우선하고 보조 장식은 축소 */
 :root[data-embed='1'] .game-layout { padding: var(--space-2); gap: var(--space-2); }
-:root[data-embed='1'] .intro-decor { display: none; }
 :root[data-embed='1'] .app-shell { min-height: 100dvh; overflow: hidden; }
+:root[data-embed='1'] .intro__hero { min-height: 100dvh; padding-top: 82px; padding-bottom: 24px; }
+:root[data-embed='1'] .intro__topbar { top: 12px; }
+:root[data-embed='1'] .intro__challenge { display: none; }
+:root[data-embed='1'] .intro__tag { margin-bottom: var(--space-4); }
 
 /* 가로 모바일: 레인과 조작을 나란히 */
 @media (max-height: 560px) and (orientation: landscape) {
@@ -52,4 +55,20 @@
       'lane board';
   }
   .area-tactile { display: none; }
+
+  .intro__hero {
+    align-items: center;
+    padding-top: 74px;
+    padding-bottom: 18px;
+  }
+  .intro__content { max-width: 620px; }
+  .intro__tag { max-width: 560px; }
+  .intro__challenge { display: none; }
+}
+
+/* 200% 확대처럼 CSS 픽셀 폭이 좁아지는 환경에서 작업 순서를 유지 */
+@media (max-width: 720px) {
+  .area-tactile { max-width: none; }
+  .form__actions { flex-wrap: wrap; }
+  .form__actions .btn { flex: 1 1 180px; }
 }
