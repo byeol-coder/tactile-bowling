@@ -32,11 +32,10 @@ const STEP_META: Record<'position' | 'angle' | 'spin' | 'power', { delta: number
   power: { delta: 0.05, min: 0, max: 1, hint: '↑ ↓로 힘을 조절하고 Space 키로 투구하세요.' },
 };
 
-const IDLE_COPY: Partial<Record<ThrowPhase, { title: string; hint: string }>> = {
+const IDLE_COPY: Partial<Record<string, { title: string; hint: string }>> = {
   announce: { title: '레인 준비 완료', hint: '현재 플레이어의 차례를 시작하면 위치 조절로 이동합니다.' },
   rolling: { title: '투구 중', hint: '공의 이동과 핀 충돌을 소리·화면·촉각으로 확인하세요.' },
   result: { title: '투구 결과', hint: '쓰러진 핀을 확인하고 다음 투구로 이동하세요.' },
-  complete: { title: '프레임 완료', hint: '점수를 계산하고 있습니다.' },
 };
 
 function Meter({ value, min, max, strong }: { value: number; min: number; max: number; strong: boolean }) {
