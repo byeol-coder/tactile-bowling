@@ -92,16 +92,39 @@ try {
         }
       }
 
-      const metrics = await page.evaluate(() => ({
-        innerWidth: window.innerWidth,
-        scrollWidth: document.documentElement.scrollWidth,
-        innerHeight: window.innerHeight,
-        scrollHeight: document.documentElement.scrollHeight,
-        fontFamily: getComputedStyle(document.body).fontFamily,
-      }));
+      const metrics = await page.evaluate(() => {
+        const overflowing = Array.from(document.querySelectorAll('body *'))
+          .map((element) => {
+            const node = element;
+            const rect = node.getBoundingClientRect();
+            const style = getComputedStyle(node);
+            return {
+              selector: `${node.tagName.toLowerCase()}${node.id ? `#${node.id}` : ''}${node.className && typeof node.className === 'string' ? `.${node.className.trim().replace(/\s+/g, '.')}` : ''}`,
+              left: Math.round(rect.left),
+              right: Math.round(rect.right),
+              width: Math.round(rect.width),
+              clientWidth: node.clientWidth,
+              scrollWidth: node.scrollWidth,
+              overflowX: style.overflowX,
+              position: style.position,
+            };
+          })
+          .filter((item) => item.left < -1 || item.right > window.innerWidth + 1)
+          .sort((a, b) => b.right - a.right)
+          .slice(0, 12);
+
+        return {
+          innerWidth: window.innerWidth,
+          scrollWidth: document.documentElement.scrollWidth,
+          innerHeight: window.innerHeight,
+          scrollHeight: document.documentElement.scrollHeight,
+          fontFamily: getComputedStyle(document.body).fontFamily,
+          overflowing,
+        };
+      });
 
       if (metrics.scrollWidth > metrics.innerWidth + 1) {
-        throw new Error(`horizontal overflow: ${metrics.scrollWidth}px > ${metrics.innerWidth}px`);
+        throw new Error(`horizontal overflow: ${metrics.scrollWidth}px > ${metrics.innerWidth}px; elements=${JSON.stringify(metrics.overflowing)}`);
       }
       if (!metrics.fontFamily.toLowerCase().includes('noto sans')) {
         throw new Error(`Noto Sans was not applied: ${metrics.fontFamily}`);
