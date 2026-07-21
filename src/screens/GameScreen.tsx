@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { createGame, reduce, type GameState } from '@/game/state/gameMachine';
+import { computeScore } from '@/game/scoring/scoring';
 import type { Player, ThrowParams } from '@/game/types';
 import { Hud } from '@/components/hud/Hud';
 import { Lane } from '@/components/game/Lane';
 import { ThrowControls } from '@/components/game/ThrowControls';
 import { Scoreboard } from '@/components/scoreboard/Scoreboard';
 import { TactilePreview } from '@/components/tactile/TactilePreview';
-import { simulator } from '@/tactile/adapters';
-import { renderAim, renderResult } from '@/tactile/TactileRenderer';
+import { simulator, broadcastTactile } from '@/tactile/adapters';
+import { renderAim, renderResult, renderPinFocus } from '@/tactile/TactileRenderer';
 import { audio } from '@/audio/AudioEngine';
 import { speak } from '@/audio/speech';
 import { announce } from '@/accessibility/announcements';
@@ -23,6 +24,7 @@ interface Props {
   onToggleSound: () => void;
   onToggleSpeech: () => void;
   onHelp: () => void;
+  onNewGame: () => void;
 }
 
 const fmtParam = {
@@ -32,7 +34,7 @@ const fmtParam = {
   power: (v: number) => `파워 ${Math.round(v * 100)} 퍼센트`,
 };
 
-export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggleSpeech, onHelp }: Props) {
+export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggleSpeech, onHelp, onNewGame }: Props) {
   const [state, dispatch] = useReducer(reduce, players, createGame);
   const [rollT, setRollT] = useState(0);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -49,11 +51,11 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
   useEffect(() => {
     const p = state.phase;
     if (p === 'rolling' && state.lastResult) {
-      void simulator.renderFrame(renderResult(state.lastResult.path, state.lastResult.standing));
+      broadcastTactile(renderResult(state.lastResult.path, state.lastResult.standing));
     } else if (p === 'result' && state.lastResult) {
-      void simulator.renderFrame(renderResult(state.lastResult.path, state.standing));
+      broadcastTactile(renderResult(state.lastResult.path, state.standing));
     } else {
-      void simulator.renderFrame(renderAim(state.params, state.standing));
+      broadcastTactile(renderAim(state.params, state.standing));
     }
 
     if (p !== prevPhase.current) {
@@ -105,11 +107,9 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
 
     // 점수 안내 + 호스트 통지
     const card = state.players[state.current].rolls;
-    import('@/game/scoring/scoring').then(({ computeScore }) => {
-      const total = computeScore(card).total;
-      window.setTimeout(() => announce(`현재 점수 ${total}점.`), 700);
-      notifyScore(state.players[state.current].player.name, state.frame, total);
-    });
+    const total = computeScore(card).total;
+    window.setTimeout(() => announce(`현재 점수 ${total}점.`), 700);
+    notifyScore(state.players[state.current].player.name, state.frame, total);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.phase, state.lastOutcome]);
 
@@ -150,7 +150,7 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
     const fine = e.shiftKey;
     const p = state.phase;
 
-    const gameKeys = ['moveLeft', 'moveRight', 'angleUp', 'angleDown', 'spinLeft', 'spinRight', 'power', 'confirm', 'back', 'restart'];
+    const gameKeys = ['moveLeft', 'moveRight', 'angleUp', 'angleDown', 'spinLeft', 'spinRight', 'power', 'confirm', 'back', 'restart', 'readState', 'readScore', 'readBoard'];
     if (gameKeys.includes(id)) e.preventDefault();
 
     switch (id) {
@@ -179,9 +179,26 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
         if (f) announce(`촉각 화면 다시 표시. 활성 점 ${f.dots.filter(Boolean).length}개.`);
         break;
       }
+      case 'readState': {
+        const pl = state.players[state.current].player.name;
+        speak(`${pl}, ${state.frame + 1}프레임 ${state.frameRolls.length + 1}투구. 남은 핀 ${standingCount}개. ${fmtParam.position(state.params.position)}, ${fmtParam.angle(state.params.angle)}, ${fmtParam.power(state.params.power)}.`, true);
+        break;
+      }
+      case 'readScore': {
+        const total = computeScore(state.players[state.current].rolls).total;
+        speak(`${state.players[state.current].player.name} 현재 점수 ${total}점.`, true);
+        break;
+      }
+      case 'readBoard': {
+        const nums = state.standing.map((up, i) => (up ? i + 1 : 0)).filter(Boolean);
+        broadcastTactile(renderPinFocus(state.standing, -1));
+        speak(nums.length ? `남은 핀 ${nums.length}개: ${nums.join(', ')}번.` : '남은 핀 없음.', true);
+        break;
+      }
+      case 'newGame': e.preventDefault(); onNewGame(); break;
       case 'help': e.preventDefault(); onHelp(); break;
     }
-  }, [state.phase, adjust, doNext, doThrow, doRestart, onToggleSound, onToggleSpeech, onHelp]);
+  }, [state.phase, state.players, state.current, state.frame, state.frameRolls.length, state.params, state.standing, standingCount, adjust, doNext, doThrow, doRestart, onToggleSound, onToggleSpeech, onHelp, onNewGame]);
 
   const tactileLabel =
     state.phase === 'result' || state.phase === 'rolling' ? '투구 결과' :
@@ -197,7 +214,7 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
           ref={stageRef}
           className="area-lane stage"
           role="application"
-          aria-label="볼링 플레이 영역. 방향키와 스페이스로 조작합니다."
+          aria-label="볼링 플레이 영역. 방향키·스페이스로 조작, F2 현재 상태, F3 점수, F4 남은 핀 듣기."
           tabIndex={0}
           onKeyDown={onKeyDown}
         >

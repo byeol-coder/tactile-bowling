@@ -15,7 +15,7 @@ import {
   type Preferences,
 } from '@/accessibility/preferences';
 import { audio } from '@/audio/AudioEngine';
-import { setSpeechEnabled, setSpeechVolume } from '@/audio/speech';
+import { setSpeechEnabled, setSpeechVolume, ensureTwTts } from '@/audio/speech';
 import { setHapticsEnabled } from '@/accessibility/haptics';
 import { initLiveRegions } from '@/accessibility/announcements';
 import { computeScore } from '@/game/scoring/scoring';
@@ -49,6 +49,7 @@ export function App() {
     setPrefs(p);
     setBests(loadBests());
     detectEmbed();
+    ensureTwTts();
     initLiveRegions();
     notifyReady();
   }, []);
@@ -111,6 +112,7 @@ export function App() {
           onToggleSound={() => patchPrefs({ volEffects: prefs.volEffects > 0 ? 0 : 0.8, volMusic: prefs.volMusic > 0 ? 0 : 0.4 })}
           onToggleSpeech={() => patchPrefs({ speech: !prefs.speech })}
           onHelp={() => setDialog('help')}
+          onNewGame={rematch}
         />
       )}
 
