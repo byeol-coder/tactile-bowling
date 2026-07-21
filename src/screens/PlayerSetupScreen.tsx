@@ -59,8 +59,13 @@ export function PlayerSetupScreen({ minPlayers, maxPlayers, onStart, onBack }: P
 
       {drafts.slice(0, count).map((d, i) => (
         <div key={i} className="player-card">
-          <p style={{ marginTop: 0, color: 'var(--text-mid)' }}>
-            <span className={`dot dot--${COLORS[i % COLORS.length]}`} aria-hidden="true" />
+          <p className="player-card__head">
+            <img
+              className="player-ball"
+              src={`/assets/balls/ball-${COLORS[i % COLORS.length]}-512.png`}
+              alt=""
+              aria-hidden="true"
+            />
             P{i + 1} · 아이콘 {ICON_LABEL[ICONS[i % ICONS.length]]}
           </p>
           <div className="player-card__grid">

@@ -11,23 +11,8 @@ export function IntroScreen({ onStartSingle, onStartMulti, onSettings, onHelp }:
   return (
     <main className="intro">
       <div className="intro__hero">
-        {/* 시그니처: 소실점 레인 (CSS/SVG, 외부 이미지 없음) */}
-        <svg className="intro__decor" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <defs>
-            <linearGradient id="hero-wood" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="var(--wood-1)" stopOpacity="0.15" />
-              <stop offset="1" stopColor="var(--wood-3)" stopOpacity="0.35" />
-            </linearGradient>
-          </defs>
-          <polygon points="360,120 440,120 620,600 180,600" fill="url(#hero-wood)" />
-          <line x1="400" y1="120" x2="400" y2="600" stroke="var(--accent-teal)" strokeWidth="1.5" strokeDasharray="6 12" opacity="0.4" />
-          {[
-            [400, 150], [384, 172], [416, 172], [368, 196], [400, 196], [432, 196],
-            [352, 224], [384, 224], [416, 224], [448, 224],
-          ].map(([x, y], i) => (
-            <ellipse key={i} cx={x} cy={y} rx="5" ry="8" fill="var(--text-hi)" opacity="0.5" />
-          ))}
-        </svg>
+        {/* 히어로 사진(장식) — 텍스트는 항상 DOM에 별도로 존재하므로 배경엔 접근성 이름이 필요 없음 */}
+        <div className="intro__decor" aria-hidden="true" />
 
         <div className="intro__content anim-rise">
           <p className="eyebrow">Tactile Worlds · 함께 플레이</p>

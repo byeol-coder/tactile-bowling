@@ -1,4 +1,16 @@
-.scoreboard { padding: var(--space-3); }
+.scoreboard {
+  padding: var(--space-4) var(--space-3) var(--space-3);
+  /* 스코어보드 베젤(장식 프레임) — 9-slice로 늘려 어떤 인원수/화면 크기에도 안 깨지게. */
+  background: var(--surface-1);
+  border-style: solid;
+  border-width: 14px 16px 16px 16px;
+  border-image-source: url('/assets/ui/scoreboard-bezel-1536x720.png');
+  border-image-slice: 100 118 105 120;
+  border-image-width: 14px 16px 16px 16px;
+  border-image-repeat: stretch;
+  border-radius: var(--radius-3);
+  box-shadow: var(--shadow-2);
+}
 .scoreboard__title { font-size: var(--fs-4); margin-bottom: var(--space-2); }
 .scoreboard__scroll { overflow-x: auto; }
 .scoreboard__table { border-collapse: collapse; width: 100%; font-size: var(--fs-2); }

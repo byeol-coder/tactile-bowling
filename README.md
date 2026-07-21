@@ -17,19 +17,23 @@ React + TypeScript + Vite. 모든 핵심 정보는 시각·음향/음성·촉각
 - 플레이 화면: SVG 원근 레인·핀·볼링공·예상/실제 궤적 (외부 이미지 없음, CSS·SVG)
 - HUD, 실제 `<table>` 점수표(스크린리더 대응), 결과 화면(순위·스트라이크/스페어·개인 최고 기록)
 - 촉각 시뮬레이터(60×40) — DotPad 없이도 핀/궤적/결과를 점으로 표시, 어댑터 인터페이스로 분리
+- **DotPad SDK 3.0.0 실물 어댑터** — 60×40 프레임을 정식 포맷(30×10 셀·셀당 2×4핀·`dotBit=lx*4+ly`, 300바이트/600 hex)으로 인코딩 후 `displayGraphicData` 전송. 연결(`startBleScan`→`connectBleDevice`)·해제·프레임 중복 방지·시뮬레이터 동시 출력. 인코딩과 연결/전송 동작을 테스트 15종으로 검증(가짜 SDK). ⚠️ 벤더 SDK 바이너리는 저장소에 미포함(독점)이며 실제 BLE 하드웨어 왕복은 브라우저에서만 검증 가능
 - Web Audio 합성 오디오(방향성 스테레오 패닝, 채널별 볼륨) + 음성 안내(TW_TTS → Web Speech → 라이브 영역 폴백)
 - 진동 패턴(navigator.vibrate), ARIA 라이브 안내(요약/상세, 중복 방지)
 - 설정/접근성: 고대비·큰 글자·모션 끄기·진동·음성·볼륨, `localStorage` 저장, `prefers-reduced-motion`
 - 디자인 토큰(색·간격·타이포·모션·z-index), 반응형 그리드, `?embed=1` 임베드 모드
+- **단일 `index.html` 빌드** — `vite-plugin-singlefile` 로 JS·CSS 인라인(Dot Games 규격 준수), production 산출물은 `dist/index.html` 하나
+- **F1~F4 + N 키 매핑** — F1 도움말, F2 현재 상태, F3 점수, F4 남은 핀 다시 듣기, N 새 게임(플랫폼 관례)
+- **임베드 TW_TTS 우선** — TW_TTS 우선 사용, 임베드 시 호스트 `tts.js` best-effort 로드 + 브라우저 speechSynthesis 직접 호출 억제(가이드 권장), 텍스트 채널은 항상 유지
 - Tactile Worlds 호스트 postMessage 브리지(ready/resize/game-start/game-complete/score-update/request-close)
 - Vercel SPA rewrite 설정, production build 성공
 
 ### 🚧 남은 작업 (P1/P2) — 미구현
-- **DotPad 실물 어댑터**: `DotPadAdapter` 는 인터페이스 스텁. 실제 SDK 3.0.0(`displayGraphicData`) 연동 필요.
+- **DotPad 벤더 SDK 파일 배치**: 어댑터·인코딩은 구현·테스트 완료. 실제 하드웨어 사용 시 `public/dotpad-sdk/DotPadSDK-3.0.0.js`(독점, 미포함)를 배치하고 `window.DotPadSDK` 전역으로 로드해야 함(index.html 주석 참고). 임베드 시 iframe 에 `allow="bluetooth"` 필요.
 - **게임패드/터치 입력 구현체**: 장치 선택 UI·구조는 있으나 gamepad/touch 조작 핸들러는 미구현.
 - **연습 모드, 튜토리얼/캘리브레이션 화면**: 미구현.
 - **진행 중 경기 자동 저장·복구(이어하기)**: 미구현.
-- **Playwright 브라우저 플레이스루 15종, axe-core 자동 검사**: 미실행(도구 미설치). 현재 검증은 Vitest(jsdom) 단위/통합 + production build.
+- **Playwright 브라우저 플레이스루 15종, axe-core 자동 검사**: 미실행(도구 미설치). 현재 검증은 Vitest(jsdom) 단위/통합(57종) + production build.
 - 파워 게이지는 접근성을 위해 "값 조절 + Space 투구" 방식으로 구현(홀드-차지 애니메이션 아님).
 
 ## 실행
@@ -58,6 +62,10 @@ npm run preview    # 빌드 결과 미리보기
 | 투구 | `Space` |
 | 이전 단계 | `Esc` |
 | 다시 투구 | `R` |
+| 현재 상태 듣기 | `F2` |
+| 점수 듣기 | `F3` |
+| 남은 핀 다시 듣기 | `F4` |
+| 새 게임 | `N` |
 | 음향·음성 토글 | `M` `V` |
 | 촉각 다시 | `T` |
 | 도움말 | `F1` |

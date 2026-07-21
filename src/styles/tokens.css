@@ -92,6 +92,11 @@
 
   /* 최소 터치 영역 */
   --touch-min: 44px;
+
+  /* 이미지 자산 오버레이(히어로/셀레브레이션 텍스트 대비 확보용) */
+  --overlay-dark-strong: rgba(2, 25, 55, 0.55);
+  --overlay-dark-soft: rgba(2, 25, 55, 0.18);
+  --overlay-bottom: rgba(4, 10, 20, 0.65);
 }
 
 /* 고대비 모드(사용자 토글 → data-attr) */
