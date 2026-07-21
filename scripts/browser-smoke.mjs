@@ -17,6 +17,7 @@ const cases = [
 await fs.mkdir(outputDir, { recursive: true });
 const browser = await chromium.launch({ headless: true });
 const failures = [];
+const reports = [];
 
 try {
   for (const testCase of cases) {
@@ -112,6 +113,7 @@ try {
         throw new Error(`console errors: ${consoleErrors.join(' | ')}`);
       }
 
+      reports.push({ name: testCase.name, status: 'PASS', metrics });
       await page.screenshot({
         path: path.join(outputDir, `${testCase.name}.png`),
         fullPage: true,
@@ -119,7 +121,9 @@ try {
 
       console.log(`PASS ${testCase.name}`, metrics);
     } catch (error) {
-      failures.push(`${testCase.name}: ${error instanceof Error ? error.message : String(error)}`);
+      const message = `${testCase.name}: ${error instanceof Error ? error.message : String(error)}`;
+      failures.push(message);
+      reports.push({ name: testCase.name, status: 'FAIL', error: message });
       await page.screenshot({
         path: path.join(outputDir, `${testCase.name}-failure.png`),
         fullPage: true,
@@ -132,7 +136,10 @@ try {
   await browser.close();
 }
 
+await fs.writeFile(path.join(outputDir, 'report.json'), JSON.stringify(reports, null, 2));
+
 if (failures.length > 0) {
+  await fs.writeFile(path.join(outputDir, 'failures.txt'), `${failures.join('\n')}\n`);
   console.error(failures.join('\n'));
   process.exitCode = 1;
 }
