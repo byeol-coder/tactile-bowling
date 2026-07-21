@@ -24,22 +24,31 @@ export function TactilePreview({ label }: Props) {
   }
 
   return (
-    <section className="tactile panel area-tactile" aria-label="촉각 미리보기">
+    <section className="tactile area-tactile" aria-label="촉각 미리보기">
       <div className="tactile__head">
-        <span className="eyebrow">촉각 미리보기 60×40</span>
+        <span>
+          <strong>촉각 보조 화면</strong>
+          <small>DotPad 60×40</small>
+        </span>
         <span className="tactile__mode">{label}</span>
       </div>
-      <svg
-        viewBox={`0 0 ${TW * gap} ${TH * gap}`}
-        className="tactile__svg"
-        role="img"
-        aria-label={`촉각 화면: ${label}. 활성 점 ${dots.length}개.`}
-      >
-        <rect x="0" y="0" width={TW * gap} height={TH * gap} rx="6" fill="var(--bg-0)" />
-        {dots.map((d, i) => (
-          <circle key={i} cx={d.x * gap + gap / 2} cy={d.y * gap + gap / 2} r={dotR} fill="var(--accent-amber)" />
-        ))}
-      </svg>
+      <div className="tactile__canvas">
+        <svg
+          viewBox={`0 0 ${TW * gap} ${TH * gap}`}
+          className="tactile__svg"
+          role="img"
+          aria-label={`촉각 화면: ${label}. 활성 점 ${dots.length}개.`}
+        >
+          <rect x="0" y="0" width={TW * gap} height={TH * gap} rx="6" fill="var(--bg-0)" />
+          {dots.map((dot, index) => (
+            <circle key={index} cx={dot.x * gap + gap / 2} cy={dot.y * gap + gap / 2} r={dotR} fill="var(--accent-amber)" />
+          ))}
+        </svg>
+      </div>
+      <div className="tactile__foot">
+        <span className="tactile__status" aria-hidden="true" />
+        <span>활성 점 {dots.length}개</span>
+      </div>
     </section>
   );
 }
