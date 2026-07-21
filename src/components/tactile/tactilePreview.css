@@ -1,0 +1,4 @@
+.tactile { padding: var(--space-3); }
+.tactile__head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--space-2); }
+.tactile__mode { font-size: var(--fs-2); color: var(--accent-teal); font-weight: 600; }
+.tactile__svg { width: 100%; height: auto; display: block; border: 1px solid var(--border-1); border-radius: var(--radius-2); }

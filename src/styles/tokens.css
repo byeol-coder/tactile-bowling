@@ -1,0 +1,122 @@
+/* 디자인 토큰 — 색·수치를 컴포넌트에 직접 반복 입력하지 않는다.
+   콘셉트: 프리미엄 볼링 라운지 / PC 스포츠 게임. 별빛·네온·과도한 글로우 금지. */
+
+:root {
+  /* 배경 · 표면 (깊은 차콜 → 네이비) */
+  --bg-0: #0e1116;      /* 최심부 배경 */
+  --bg-1: #141922;      /* 기본 배경 */
+  --surface-1: #1b2230; /* 패널 */
+  --surface-2: #232c3d; /* 상단 패널 */
+  --surface-3: #2c3750; /* 강조 패널 */
+
+  /* 레인 우드 톤 (따뜻한 목재) */
+  --wood-1: #6b4a2f;
+  --wood-2: #9a6c40;
+  --wood-3: #c68a4e;
+  --wood-hi: #e0b483;
+
+  /* 텍스트 (아이보리/화이트, AA 이상) */
+  --text-hi: #f4f1ea;   /* 주요 텍스트 */
+  --text-mid: #c3cad6;  /* 보조 텍스트 */
+  --text-low: #8a93a3;  /* 캡션 */
+
+  /* 포인트 컬러 — 제한적 사용 (청록/블루/앰버) */
+  --accent-teal: #2fb4a8;
+  --accent-blue: #4a8fe0;
+  --accent-amber: #e0a63c;
+
+  /* 상태 색 (AA 대비 확보) */
+  --success: #4fbf7a;
+  --warn: #e0a63c;
+  --danger: #e5675f;
+
+  /* 플레이어 식별 색(색만으로 구분 금지 — 아이콘/번호/음향 병행) */
+  --player-teal: #2fb4a8;
+  --player-blue: #4a8fe0;
+  --player-amber: #e0a63c;
+  --player-rose: #d97596;
+
+  /* 테두리 · 포커스 */
+  --border-1: #2f3a4d;
+  --border-2: #3d4a63;
+  --focus-ring: #7cc6ff;
+  --focus-ring-width: 3px;
+
+  /* 그림자 단계 (은은하게, 글로우 아님) */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+  /* 간격 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* 모서리 반경 */
+  --radius-1: 6px;
+  --radius-2: 10px;
+  --radius-3: 16px;
+  --radius-pill: 999px;
+
+  /* 타이포그래피 */
+  --font-display: 'Black Han Sans', 'Pretendard', system-ui, sans-serif;
+  --font-body: 'Pretendard', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, monospace;
+  --fs-1: 0.75rem;
+  --fs-2: 0.875rem;
+  --fs-3: 1rem;
+  --fs-4: 1.25rem;
+  --fs-5: 1.5rem;
+  --fs-6: 2rem;
+  --fs-7: 3rem;
+  --fs-display: clamp(2.5rem, 6vw, 4.5rem);
+
+  /* 애니메이션 시간 */
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+  --dur-slow: 420ms;
+  --dur-roll: 1400ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* 레이어 순서 */
+  --z-lane: 1;
+  --z-hud: 10;
+  --z-panel: 20;
+  --z-dialog: 100;
+  --z-live: 1000;
+
+  /* 최소 터치 영역 */
+  --touch-min: 44px;
+}
+
+/* 고대비 모드(사용자 토글 → data-attr) */
+:root[data-contrast='high'] {
+  --bg-0: #000000;
+  --bg-1: #05070a;
+  --surface-1: #10151d;
+  --surface-2: #161d28;
+  --text-hi: #ffffff;
+  --text-mid: #e8edf5;
+  --border-1: #5a6b85;
+  --border-2: #7f92b0;
+  --accent-teal: #4fe0d2;
+  --accent-blue: #77b3ff;
+  --accent-amber: #ffca5c;
+  --focus-ring: #ffffff;
+}
+
+/* 큰 글자 모드 */
+:root[data-textsize='large'] {
+  --fs-1: 0.875rem;
+  --fs-2: 1rem;
+  --fs-3: 1.15rem;
+  --fs-4: 1.4rem;
+  --fs-5: 1.75rem;
+  --fs-6: 2.25rem;
+  --fs-7: 3.25rem;
+}

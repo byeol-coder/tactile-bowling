@@ -1,0 +1,22 @@
+.scoreboard { padding: var(--space-3); }
+.scoreboard__title { font-size: var(--fs-4); margin-bottom: var(--space-2); }
+.scoreboard__scroll { overflow-x: auto; }
+.scoreboard__table { border-collapse: collapse; width: 100%; font-size: var(--fs-2); }
+.scoreboard__table th, .scoreboard__table td {
+  border: 1px solid var(--border-1); text-align: center; padding: var(--space-1);
+  min-width: 34px;
+}
+.scoreboard__table thead th { background: var(--surface-2); color: var(--text-mid); font-weight: 600; }
+.scoreboard__namecol { text-align: left; white-space: nowrap; padding-inline: var(--space-2); }
+.scoreboard__pnum { color: var(--text-low); font-family: var(--font-mono); }
+.scoreboard__table tr.is-current { background: color-mix(in srgb, var(--accent-teal) 14%, transparent); }
+.scoreboard__table th[aria-current='step'] { background: color-mix(in srgb, var(--accent-teal) 30%, var(--surface-2)); color: var(--text-hi); }
+.scoreboard__rolls { display: flex; justify-content: center; gap: 2px; min-height: 1.1em; }
+.scoreboard__roll { display: inline-block; min-width: 0.8em; font-family: var(--font-mono); }
+.scoreboard__cum { display: block; font-weight: 700; color: var(--text-hi); }
+.scoreboard__total { font-weight: 800; font-size: var(--fs-3); background: var(--surface-2); }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+.dot--teal { background: var(--player-teal); }
+.dot--blue { background: var(--player-blue); }
+.dot--amber { background: var(--player-amber); }
+.dot--rose { background: var(--player-rose); }
