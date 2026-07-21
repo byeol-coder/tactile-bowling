@@ -13,23 +13,31 @@
 }
 
 .tactile,
-.scoreboard,
-.scoreboard__scroll {
+.scoreboard {
   width: 100%;
 }
 
+/* 표의 고정 폭은 내부 스크롤에서만 사용하고 문서 폭에는 영향을 주지 않는다. */
 .scoreboard {
-  contain: inline-size;
+  contain: none;
+  overflow: hidden;
 }
 
 .scoreboard__scroll {
+  flex: 1 1 auto;
+  display: block;
+  width: 0;
+  min-width: 100%;
   max-width: 100%;
   overflow-x: auto;
+  overflow-y: auto;
   overscroll-behavior-inline: contain;
 }
 
 .scoreboard__table {
-  width: max-content;
+  width: 660px;
+  min-width: 660px;
+  max-width: none;
 }
 
 /* 데스크톱에서는 HUD·레인·조작부를 한 화면 안에 유지한다.
@@ -64,6 +72,13 @@
   .scoreboard__scroll {
     min-height: 0;
     max-height: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .scoreboard__table {
+    width: 620px;
+    min-width: 620px;
   }
 }
 
