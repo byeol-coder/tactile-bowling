@@ -1,4 +1,62 @@
-.tactile { padding: var(--space-3); }
-.tactile__head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--space-2); }
-.tactile__mode { font-size: var(--fs-2); color: var(--accent-teal); font-weight: 600; }
-.tactile__svg { width: 100%; height: auto; display: block; border: 1px solid var(--border-1); border-radius: var(--radius-2); }
+.tactile {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: linear-gradient(180deg, rgba(21,32,51,.94), rgba(11,18,30,.96));
+  border: 1px solid rgba(215,222,234,.16);
+  border-radius: var(--radius-3);
+  box-shadow: var(--shadow-2);
+}
+.tactile__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+.tactile__head > span:first-child { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.tactile__head strong { color: var(--text-hi); font-size: var(--fs-3); font-weight: 800; }
+.tactile__head small { color: var(--text-low); font-size: var(--fs-1); font-weight: 600; }
+.tactile__mode {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  color: var(--accent-teal);
+  background: rgba(55,185,173,.11);
+  border: 1px solid rgba(55,185,173,.26);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-1);
+  font-weight: 800;
+}
+.tactile__canvas {
+  overflow: hidden;
+  background: var(--bg-0);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-2);
+  box-shadow: inset 0 4px 16px rgba(0,0,0,.38);
+}
+.tactile__svg { width: 100%; height: auto; max-height: 190px; display: block; }
+.tactile__foot {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-low);
+  font-size: var(--fs-1);
+  font-weight: 600;
+}
+.tactile__status {
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(89,201,135,.1);
+}
+
+@media (max-width: 899px) {
+  .tactile__svg { max-height: 170px; }
+}
+
+@media (max-width: 560px) {
+  .tactile { padding: 12px; }
+  .tactile__svg { max-height: 145px; }
+}
