@@ -1,4 +1,13 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
+import {
+  IconArrowRight,
+  IconHelp,
+  IconMessageCircle,
+  IconMessageCircleOff,
+  IconPlayerPlay,
+  IconVolume,
+  IconVolumeOff,
+} from '@tabler/icons-react';
 import { createGame, reduce, type GameState } from '@/game/state/gameMachine';
 import type { Player, ThrowParams } from '@/game/types';
 import { Hud } from '@/components/hud/Hud';
@@ -32,6 +41,24 @@ const fmtParam = {
   power: (v: number) => `파워 ${Math.round(v * 100)} 퍼센트`,
 };
 
+const PHASE_COPY: Record<string, { kicker: string; title: string; hint: string }> = {
+  announce: { kicker: 'READY', title: '차례를 시작하세요', hint: '레인의 핀 배치를 확인한 뒤 시작합니다.' },
+  position: { kicker: 'STEP 1', title: '공을 놓을 위치를 정하세요', hint: '좌우 방향키로 시작 위치를 움직입니다.' },
+  angle: { kicker: 'STEP 2', title: '핀을 향할 방향을 정하세요', hint: '위아래 방향키로 투구 각도를 조절합니다.' },
+  spin: { kicker: 'STEP 3', title: '공의 회전을 선택하세요', hint: 'Z와 X 키로 훅 방향을 조절합니다.' },
+  power: { kicker: 'FINAL STEP', title: '힘을 정하고 공을 던지세요', hint: 'Space 키 또는 공 던지기 버튼으로 투구합니다.' },
+  rolling: { kicker: 'ROLLING', title: '공이 레인을 달리고 있어요', hint: '소리와 촉각으로 이동 방향을 함께 확인하세요.' },
+  result: { kicker: 'RESULT', title: '투구 결과를 확인하세요', hint: '남은 핀과 점수를 확인한 뒤 다음으로 이동합니다.' },
+  complete: { kicker: 'SCORE', title: '점수를 계산하고 있어요', hint: '다음 프레임을 준비합니다.' },
+};
+
+const OUTCOME_COPY: Record<string, string> = {
+  strike: 'STRIKE!',
+  spare: 'SPARE!',
+  gutter: 'GUTTER',
+  open: 'NICE ROLL',
+};
+
 export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggleSpeech, onHelp }: Props) {
   const [state, dispatch] = useReducer(reduce, players, createGame);
   const [rollT, setRollT] = useState(0);
@@ -39,6 +66,8 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
   const prevPhase = useRef<string>('');
 
   const standingCount = state.standing.filter(Boolean).length;
+  const soundOn = prefs.volEffects > 0 || prefs.volMusic > 0;
+  const phaseCopy = PHASE_COPY[state.phase] ?? PHASE_COPY.announce;
 
   // 게임 영역에 명시적으로 진입(포커스)한 뒤에만 방향키를 가로챈다.
   useEffect(() => {
@@ -83,7 +112,6 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
     const step = (now: number) => {
       const t = Math.min(1, (now - start) / dur);
       setRollT(t);
-      // 공 위치 팬 사운드
       if (t < 1 && Math.random() < 0.1) audio.roll(state.params.position + state.params.spin * 0.4 * t * t);
       if (t < 1) raf = requestAnimationFrame(step);
       else dispatch({ type: 'settle' });
@@ -103,7 +131,6 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
     else if (o === 'gutter') { audio.gutter(); haptic('gutter'); speak('거터. 0핀.', true); }
     else { audio.open(); haptic('open'); audio.pinHit(state.params.position); speak(`${down}핀 쓰러짐.`, true); }
 
-    // 점수 안내 + 호스트 통지
     const card = state.players[state.current].rolls;
     import('@/game/scoring/scoring').then(({ computeScore }) => {
       const total = computeScore(card).total;
@@ -118,8 +145,8 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
     if (state.finished) {
       audio.gameEnd();
       speak('경기 종료.', true);
-      const t = window.setTimeout(() => onComplete(state), 1400);
-      return () => window.clearTimeout(t);
+      const timer = window.setTimeout(() => onComplete(state), 1400);
+      return () => window.clearTimeout(timer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.finished]);
@@ -143,43 +170,43 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.params]);
 
-  const onKeyDown = useCallback((e: React.KeyboardEvent) => {
-    const id = matchShortcut(e.key);
+  const onKeyDown = useCallback((event: React.KeyboardEvent) => {
+    const id = matchShortcut(event.key);
     if (!id) return;
     audio.ensure();
-    const fine = e.shiftKey;
-    const p = state.phase;
+    const fine = event.shiftKey;
+    const phase = state.phase;
 
     const gameKeys = ['moveLeft', 'moveRight', 'angleUp', 'angleDown', 'spinLeft', 'spinRight', 'power', 'confirm', 'back', 'restart'];
-    if (gameKeys.includes(id)) e.preventDefault();
+    if (gameKeys.includes(id)) event.preventDefault();
 
     switch (id) {
-      case 'moveLeft': if (p === 'position') adjust('position', fine ? -0.03 : -0.1); break;
-      case 'moveRight': if (p === 'position') adjust('position', fine ? 0.03 : 0.1); break;
-      case 'angleUp': if (p === 'angle') adjust('angle', fine ? 0.5 : 2); else if (p === 'power') adjust('power', fine ? 0.02 : 0.05); break;
-      case 'angleDown': if (p === 'angle') adjust('angle', fine ? -0.5 : -2); else if (p === 'power') adjust('power', fine ? -0.02 : -0.05); break;
-      case 'spinLeft': if (p === 'spin') adjust('spin', fine ? -0.03 : -0.1); break;
-      case 'spinRight': if (p === 'spin') adjust('spin', fine ? 0.03 : 0.1); break;
+      case 'moveLeft': if (phase === 'position') adjust('position', fine ? -0.03 : -0.1); break;
+      case 'moveRight': if (phase === 'position') adjust('position', fine ? 0.03 : 0.1); break;
+      case 'angleUp': if (phase === 'angle') adjust('angle', fine ? 0.5 : 2); else if (phase === 'power') adjust('power', fine ? 0.02 : 0.05); break;
+      case 'angleDown': if (phase === 'angle') adjust('angle', fine ? -0.5 : -2); else if (phase === 'power') adjust('power', fine ? -0.02 : -0.05); break;
+      case 'spinLeft': if (phase === 'spin') adjust('spin', fine ? -0.03 : -0.1); break;
+      case 'spinRight': if (phase === 'spin') adjust('spin', fine ? 0.03 : 0.1); break;
       case 'confirm':
-        if (p === 'result') dispatch({ type: 'confirmTurn' });
-        else if (p === 'power') doThrow();
-        else if (p === 'announce' || p === 'position' || p === 'angle' || p === 'spin') doNext();
+        if (phase === 'result') dispatch({ type: 'confirmTurn' });
+        else if (phase === 'power') doThrow();
+        else if (phase === 'announce' || phase === 'position' || phase === 'angle' || phase === 'spin') doNext();
         break;
       case 'power':
-        if (p === 'power') doThrow();
-        else if (p === 'result') dispatch({ type: 'confirmTurn' });
-        else if (p === 'announce') doNext();
+        if (phase === 'power') doThrow();
+        else if (phase === 'result') dispatch({ type: 'confirmTurn' });
+        else if (phase === 'announce') doNext();
         break;
       case 'back': dispatch({ type: 'prevPhase' }); break;
       case 'restart': doRestart(); break;
       case 'toggleSound': onToggleSound(); break;
       case 'toggleSpeech': onToggleSpeech(); break;
       case 'repeatTactile': {
-        const f = simulator.getFrame();
-        if (f) announce(`촉각 화면 다시 표시. 활성 점 ${f.dots.filter(Boolean).length}개.`);
+        const frame = simulator.getFrame();
+        if (frame) announce(`촉각 화면 다시 표시. 활성 점 ${frame.dots.filter(Boolean).length}개.`);
         break;
       }
-      case 'help': e.preventDefault(); onHelp(); break;
+      case 'help': event.preventDefault(); onHelp(); break;
     }
   }, [state.phase, adjust, doNext, doThrow, doRestart, onToggleSound, onToggleSpeech, onHelp]);
 
@@ -188,33 +215,84 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
     state.phase === 'announce' ? '현재 핀 배치' : '예상 궤적';
 
   return (
-    <div className="app-shell">
+    <div className="app-shell game-shell">
       <a href="#throw-controls" className="skip-link">조작 영역으로 건너뛰기</a>
       <div className="game-layout">
         <Hud players={state.players} current={state.current} frame={state.frame} frameRollCount={state.frameRolls.length} />
 
         <div
           ref={stageRef}
-          className="area-lane stage"
+          className={`area-lane stage stage--${state.phase}`}
           role="application"
           aria-label="볼링 플레이 영역. 방향키와 스페이스로 조작합니다."
           tabIndex={0}
           onKeyDown={onKeyDown}
         >
+          <div className="stage__chrome">
+            <div className="stage__status" aria-hidden="true">
+              <span>{phaseCopy.kicker}</span>
+              <strong>{phaseCopy.title}</strong>
+              <small>{phaseCopy.hint}</small>
+            </div>
+            <div className="stage__tools" aria-label="게임 보조 기능">
+              <button
+                type="button"
+                className="btn btn--ghost btn--icon stage__tool"
+                onClick={onToggleSound}
+                aria-label={soundOn ? '게임 음향 끄기' : '게임 음향 켜기'}
+                aria-pressed={soundOn}
+                title={soundOn ? '음향 켜짐' : '음향 꺼짐'}
+              >
+                {soundOn ? <IconVolume size={20} aria-hidden="true" /> : <IconVolumeOff size={20} aria-hidden="true" />}
+              </button>
+              <button
+                type="button"
+                className="btn btn--ghost btn--icon stage__tool"
+                onClick={onToggleSpeech}
+                aria-label={prefs.speech ? '음성 안내 끄기' : '음성 안내 켜기'}
+                aria-pressed={prefs.speech}
+                title={prefs.speech ? '음성 안내 켜짐' : '음성 안내 꺼짐'}
+              >
+                {prefs.speech ? <IconMessageCircle size={20} aria-hidden="true" /> : <IconMessageCircleOff size={20} aria-hidden="true" />}
+              </button>
+              <button
+                type="button"
+                className="btn btn--ghost btn--icon stage__tool"
+                onClick={onHelp}
+                aria-label="게임 도움말 열기"
+                title="도움말"
+              >
+                <IconHelp size={20} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
           <Lane standing={state.standing} params={state.params} phase={state.phase} lastResult={state.lastResult} rollT={rollT} />
+
+          <div className="stage__pin-count" aria-label={`남은 핀 ${standingCount}개`}>
+            <span>남은 핀</span>
+            <strong>{standingCount}</strong>
+          </div>
+
+          {state.phase === 'result' && state.lastOutcome && (
+            <div className={`stage__outcome stage__outcome--${state.lastOutcome}`} aria-hidden="true">
+              {OUTCOME_COPY[state.lastOutcome] ?? OUTCOME_COPY.open}
+            </div>
+          )}
+
           {state.phase === 'result' && (
             <button type="button" className="btn btn--primary stage__next" onClick={() => dispatch({ type: 'confirmTurn' })}>
-              다음 →
+              다음 투구 <IconArrowRight size={20} aria-hidden="true" />
             </button>
           )}
           {state.phase === 'announce' && (
             <button type="button" className="btn btn--primary stage__next" onClick={doNext}>
-              {state.players[state.current].player.name} 차례 시작
+              <IconPlayerPlay size={20} aria-hidden="true" /> {state.players[state.current].player.name} 차례 시작
             </button>
           )}
         </div>
 
-        <div id="throw-controls">
+        <div id="throw-controls" className="area-controls-wrap">
           <ThrowControls phase={state.phase} params={state.params} onAdjust={adjust} onNext={doNext} onThrow={doThrow} onRestart={doRestart} />
         </div>
 
