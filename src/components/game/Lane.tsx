@@ -30,71 +30,69 @@ export function Lane({ standing, params, phase, lastResult, rollT }: LaneProps) 
     return pts.join(' ');
   }, [params]);
 
-  // 공 현재 위치
   let bx = ballScreenX(params.position);
   let by = 372;
+  let ballDepth = 0;
   if (phase === 'rolling' && lastResult) {
-    const t = Math.min(1, rollT);
-    bx = ballScreenX(ballXAtDepth(params, t));
-    by = ballScreenY(t);
+    ballDepth = Math.min(1, rollT);
+    bx = ballScreenX(ballXAtDepth(params, ballDepth));
+    by = ballScreenY(ballDepth);
   }
 
+  const ballSize = 36 - ballDepth * 19;
   const showAim = phase === 'position' || phase === 'angle' || phase === 'spin' || phase === 'power';
 
   return (
-    <svg viewBox="0 0 400 420" className="lane-svg" role="img" aria-label="볼링 레인 장면">
-      <defs>
-        <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="var(--wood-1)" />
-          <stop offset="0.5" stopColor="var(--wood-2)" />
-          <stop offset="1" stopColor="var(--wood-3)" />
-        </linearGradient>
-        <linearGradient id="gutter" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#161d28" />
-          <stop offset="1" stopColor="#252f40" />
-        </linearGradient>
-      </defs>
-
-      {/* 뒤 벽 */}
-      <rect x="120" y="20" width="160" height="46" rx="6" fill="var(--surface-2)" stroke="var(--border-2)" />
-
-      {/* 거터 */}
-      <polygon points="150,40 250,40 372,388 28,388" fill="url(#gutter)" />
-      {/* 레인 우드 */}
-      <polygon points="158,44 242,44 350,384 50,384" fill="url(#wood)" stroke="var(--wood-hi)" strokeOpacity="0.4" />
-      {/* 파울 라인 */}
-      <line x1="50" y1="384" x2="350" y2="384" stroke="var(--wood-hi)" strokeWidth="2" strokeOpacity="0.6" />
+    <svg viewBox="0 0 400 420" className={`lane-svg lane-svg--${phase}`} role="img" aria-label="볼링 레인 장면">
+      <image href="/assets/play-lane-backdrop.svg" x="0" y="0" width="400" height="420" preserveAspectRatio="none" />
 
       {/* 예상 궤적 */}
       {showAim && (
-        <polyline
-          points={aimPts}
-          fill="none"
-          stroke="var(--accent-teal)"
-          strokeWidth="2.5"
-          strokeDasharray="4 6"
-          strokeLinecap="round"
-          opacity="0.9"
-        />
+        <>
+          <polyline
+            points={aimPts}
+            fill="none"
+            stroke="rgba(5, 9, 18, 0.5)"
+            strokeWidth="7"
+            strokeLinecap="round"
+            opacity="0.72"
+          />
+          <polyline
+            points={aimPts}
+            fill="none"
+            stroke="var(--accent-teal)"
+            strokeWidth="3.25"
+            strokeDasharray="5 7"
+            strokeLinecap="round"
+            opacity="0.96"
+          />
+        </>
       )}
 
       {/* 핀 */}
       {PIN_LAYOUT.map((p, i) => {
         const cx = pinX(p.x, p.y);
         const cy = pinY(p.y);
-        const r = 6.5 - p.y * 1.4;
+        const w = 17 - p.y * 4;
+        const h = w * 1.75;
+        const isStanding = standing[i];
         return (
-          <g key={i} opacity={standing[i] ? 1 : 0.16}>
-            <ellipse
-              cx={cx}
-              cy={cy}
-              rx={r}
-              ry={r * 1.4}
-              fill={standing[i] ? 'var(--text-hi)' : 'var(--text-low)'}
-              stroke="var(--danger)"
-              strokeWidth={standing[i] ? 1 : 0}
+          <g
+            key={i}
+            className={isStanding ? 'lane-pin is-standing' : 'lane-pin is-down'}
+            opacity={isStanding ? 1 : 0.38}
+            transform={isStanding ? undefined : `rotate(68 ${cx} ${cy})`}
+          >
+            <image
+              href="/assets/bowling-pin.svg"
+              x={cx - w / 2}
+              y={cy - h * 0.76}
+              width={w}
+              height={h}
+              preserveAspectRatio="xMidYMid meet"
             />
-            <text x={cx} y={cy + 2} fontSize="5" textAnchor="middle" fill="var(--bg-0)">
+            <circle cx={cx + w * 0.52} cy={cy - h * 0.52} r="4.3" fill="rgba(9,14,24,.88)" stroke="rgba(255,255,255,.45)" strokeWidth="0.6" />
+            <text x={cx + w * 0.52} y={cy - h * 0.52 + 1.8} fontSize="4.5" fontWeight="800" textAnchor="middle" fill="var(--text-hi)">
               {i + 1}
             </text>
           </g>
@@ -107,15 +105,23 @@ export function Lane({ standing, params, phase, lastResult, rollT }: LaneProps) 
           points={lastResult.path.map((pt) => `${ballScreenX(pt.x).toFixed(1)},${ballScreenY(pt.y).toFixed(1)}`).join(' ')}
           fill="none"
           stroke="var(--accent-amber)"
-          strokeWidth="3"
+          strokeWidth="3.5"
           strokeLinecap="round"
-          opacity="0.7"
+          opacity="0.82"
         />
       )}
 
       {/* 볼링공 */}
-      <circle cx={bx} cy={by} r="9" fill="var(--accent-blue)" stroke="var(--text-hi)" strokeWidth="1.5" />
-      <circle cx={bx - 2.5} cy={by - 2.5} r="1.5" fill="var(--bg-0)" />
+      <ellipse cx={bx} cy={by + ballSize * 0.34} rx={ballSize * 0.45} ry={ballSize * 0.14} fill="rgba(3,7,14,.48)" />
+      <image
+        href="/assets/bowling-ball.svg"
+        x={bx - ballSize / 2}
+        y={by - ballSize / 2}
+        width={ballSize}
+        height={ballSize}
+        preserveAspectRatio="xMidYMid meet"
+        className="lane-ball"
+      />
     </svg>
   );
 }
