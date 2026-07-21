@@ -70,7 +70,7 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
         speak(`파워 조절. ${fmtParam.power(state.params.power)}. 스페이스로 투구.`);
       }
     }
-  }, [state.phase, state.params, state.current, state.frame, state.lastResult, state.standing, standingCount, state.players, state.frameRolls.length]);
+  }, [state, standingCount]);
 
   // 공 이동 애니메이션 → settle
   useEffect(() => {
