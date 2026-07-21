@@ -201,7 +201,14 @@ export function GameScreen({ players, prefs, onComplete, onToggleSound, onToggle
           tabIndex={0}
           onKeyDown={onKeyDown}
         >
-          <Lane standing={state.standing} params={state.params} phase={state.phase} lastResult={state.lastResult} rollT={rollT} />
+          <Lane
+            standing={state.standing}
+            params={state.params}
+            phase={state.phase}
+            lastResult={state.lastResult}
+            rollT={rollT}
+            ballColorId={state.players[state.current].player.colorId}
+          />
           {state.phase === 'result' && (
             <button type="button" className="btn btn--primary stage__next" onClick={() => dispatch({ type: 'confirmTurn' })}>
               다음 →

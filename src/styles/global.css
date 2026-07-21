@@ -7,7 +7,13 @@
 html, body, #root { height: 100%; margin: 0; }
 
 body {
-  background: radial-gradient(120% 120% at 50% -10%, var(--bg-1), var(--bg-0));
+  background-image:
+    radial-gradient(120% 120% at 50% -10%, var(--bg-1), var(--bg-0) 65%),
+    url('/assets/textures/lane-wood-seamless-512.webp');
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 340px 340px;
+  background-blend-mode: normal, overlay;
+  background-color: var(--bg-0);
   color: var(--text-hi);
   font-family: var(--font-body);
   font-size: var(--fs-3);

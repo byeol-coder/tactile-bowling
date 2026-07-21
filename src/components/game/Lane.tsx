@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { PinState, ThrowParams } from '@/game/types';
+import type { PinState, PlayerColorId, ThrowParams } from '@/game/types';
 import { PIN_LAYOUT, ballXAtDepth, type ThrowResult } from '@/game/physics/resolve';
 
 interface LaneProps {
@@ -8,7 +8,15 @@ interface LaneProps {
   phase: string;
   lastResult: ThrowResult | null;
   rollT: number; // 0~1 공 이동 진행
+  ballColorId?: PlayerColorId; // 현재 플레이어가 고른 공 색(선택) — SVG 채우기 색상에 반영
 }
+
+const BALL_FILL: Record<PlayerColorId, string> = {
+  teal: 'var(--player-teal)',
+  blue: 'var(--player-blue)',
+  amber: 'var(--player-amber)',
+  rose: 'var(--player-rose)',
+};
 
 // 원근 화면 매핑
 const yFront = 150;
@@ -20,7 +28,7 @@ const pinX = (x: number, depth: number) => 200 + x * pinSpread(depth);
 const ballScreenX = (x: number) => 200 + x * 118;
 const ballScreenY = (t: number) => 372 - t * (372 - yFront);
 
-export function Lane({ standing, params, phase, lastResult, rollT }: LaneProps) {
+export function Lane({ standing, params, phase, lastResult, rollT, ballColorId }: LaneProps) {
   const aimPts = useMemo(() => {
     const pts: string[] = [];
     for (let i = 0; i <= 12; i++) {
@@ -113,8 +121,8 @@ export function Lane({ standing, params, phase, lastResult, rollT }: LaneProps) 
         />
       )}
 
-      {/* 볼링공 */}
-      <circle cx={bx} cy={by} r="9" fill="var(--accent-blue)" stroke="var(--text-hi)" strokeWidth="1.5" />
+      {/* 볼링공 — 플레이어가 고른 색(자산 팩의 공 색상과 동일한 팔레트) */}
+      <circle cx={bx} cy={by} r="9" fill={ballColorId ? BALL_FILL[ballColorId] : 'var(--accent-blue)'} stroke="var(--text-hi)" strokeWidth="1.5" />
       <circle cx={bx - 2.5} cy={by - 2.5} r="1.5" fill="var(--bg-0)" />
     </svg>
   );
