@@ -1,3 +1,37 @@
+/* 게임 레이아웃의 자식 콘텐츠가 그리드 폭을 밀어내지 않도록 제한한다. */
+.game-shell {
+  overflow-x: clip;
+}
+
+.game-layout,
+.game-layout > *,
+.area-controls-wrap,
+.tactile,
+.scoreboard {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.tactile,
+.scoreboard,
+.scoreboard__scroll {
+  width: 100%;
+}
+
+.scoreboard {
+  contain: inline-size;
+}
+
+.scoreboard__scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.scoreboard__table {
+  width: max-content;
+}
+
 /* 데스크톱에서는 HUD·레인·조작부를 한 화면 안에 유지한다.
    모바일은 자연스러운 세로 스크롤 흐름을 사용한다. */
 @media (min-width: 900px) {
