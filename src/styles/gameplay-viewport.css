@@ -1,0 +1,79 @@
+/* 데스크톱에서는 HUD·레인·조작부를 한 화면 안에 유지한다.
+   모바일은 자연스러운 세로 스크롤 흐름을 사용한다. */
+@media (min-width: 900px) {
+  .game-layout {
+    height: 100dvh;
+    min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+
+  .stage {
+    min-height: 0;
+  }
+
+  .stage .lane-svg {
+    width: auto;
+    max-width: min(100%, 700px);
+    height: 100%;
+    max-height: 100%;
+  }
+
+  .tactile,
+  .scoreboard {
+    min-height: 0;
+  }
+
+  .tactile__svg {
+    max-height: min(20dvh, 180px);
+  }
+
+  .scoreboard__scroll {
+    min-height: 0;
+    max-height: 100%;
+  }
+}
+
+@media (min-width: 900px) and (max-height: 820px) {
+  .game-layout {
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .hud {
+    min-height: 64px;
+    padding-block: 8px;
+  }
+
+  .controls {
+    padding: 10px 14px;
+    gap: 8px 14px;
+  }
+
+  .controls__step {
+    min-height: 26px;
+    padding-block: 4px;
+  }
+
+  .controls__adjuster {
+    grid-template-columns: 44px minmax(120px, 1fr) 44px;
+  }
+
+  .controls__adj,
+  .stage__tool {
+    min-height: 44px;
+  }
+
+  .stage__chrome {
+    top: 12px;
+    right: 12px;
+    left: 12px;
+  }
+
+  .stage__pin-count,
+  .stage__next {
+    bottom: 12px;
+  }
+
+  .stage__pin-count { left: 12px; }
+  .stage__next { right: 12px; }
+}
